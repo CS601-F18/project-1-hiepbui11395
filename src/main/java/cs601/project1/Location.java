@@ -1,21 +1,26 @@
 package cs601.project1;
 
 public class Location {
-	private int line;
+	private int lineNumber;
 	private int count;
 	
-	public Location(int line, int count) {
+	public Location(int lineNumber, int count) {
 		super();
-		this.line = line;
+		this.lineNumber = lineNumber;
 		this.count = count;
 	}
-
-	public int getLine() {
-		return line;
+	
+	public Location(int lineNumber) {
+		super();
+		this.lineNumber = lineNumber;
 	}
 
-	public void setLine(int line) {
-		this.line = line;
+	public int getLineNumber() {
+		return lineNumber;
+	}
+
+	public void setLineNumber(int lineNumber) {
+		this.lineNumber = lineNumber;
 	}
 
 	public int getCount() {
@@ -32,7 +37,7 @@ public class Location {
 			return false;
 		}
 		Location l = (Location)o;
-		if(this.getLine() == l.getLine()) {
+		if(this.getLineNumber() == l.getLineNumber()) {
 			return true;
 		}
 		return false;

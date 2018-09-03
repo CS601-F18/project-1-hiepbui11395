@@ -19,13 +19,15 @@ public class ListLocation {
 	 * @param location
 	 */
 	public void addToList(Location location) {
-		int index = 0;
-		if((index = listLocation.indexOf(location)) == -1) {
-			listLocation.add(location);
-		} else {
-			Location l = listLocation.get(index);
-			l.setCount(l.getCount() + 1);
-		}
+//		int index = 0;
+//		if((index = listLocation.indexOf(location)) == -1) {
+//			location.setCount(1);
+//			listLocation.add(location);
+//		} else {
+//			Location l = listLocation.get(index);
+//			l.setCount(l.getCount() + 1);
+//		}
+		this.listLocation.add(location);
 	}
 
 	/**
