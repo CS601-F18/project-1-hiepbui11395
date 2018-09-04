@@ -3,8 +3,8 @@ package cs601.project1;
 public class Review extends Product{
 	private String reviewText;
 
-	public Review(int lineNumber, String reviewText) {
-		super(lineNumber);
+	public Review(int lineNumber, String asin, String reviewText) {
+		super(lineNumber, asin);
 		this.reviewText = reviewText;
 	}
 

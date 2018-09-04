@@ -19,14 +19,6 @@ public class ListLocation {
 	 * @param location
 	 */
 	public void addToList(Location location) {
-//		int index = 0;
-//		if((index = listLocation.indexOf(location)) == -1) {
-//			location.setCount(1);
-//			listLocation.add(location);
-//		} else {
-//			Location l = listLocation.get(index);
-//			l.setCount(l.getCount() + 1);
-//		}
 		this.listLocation.add(location);
 	}
 
@@ -35,9 +27,9 @@ public class ListLocation {
 	 * Sort the list of location by using Count in Location
 	 * 
 	 */
-	public void sortByCount() {
+	public ArrayList<Location> sortByCount() {
 
-		listLocation.sort(new Comparator<Location>() {
+		this.listLocation.sort(new Comparator<Location>() {
 
 			@Override
 			public int compare(Location o1, Location o2) {
@@ -45,5 +37,6 @@ public class ListLocation {
 				return Integer.compare(o1.getCount(),o2.getCount());
 			}
 		});
+		return this.listLocation;
 	}
 }

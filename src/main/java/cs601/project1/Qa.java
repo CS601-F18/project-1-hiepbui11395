@@ -4,8 +4,8 @@ public class Qa extends Product {
 	private String question;
 	private String answer;
 	
-	public Qa(int lineNumber, String question, String answer) {
-		super(lineNumber);
+	public Qa(int lineNumber, String asin, String question, String answer) {
+		super(lineNumber, asin);
 		this.question = question;
 		this.answer = answer;
 	}

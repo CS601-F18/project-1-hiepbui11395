@@ -17,20 +17,20 @@ import cs601.project1.AmazonSearch.TYPE;
 
 public class InvertedIndex {
 	private HashMap<String, ListLocation> index;
-	private ArrayList<Product> product;
+	private ArrayList<Product> products;
 
 	private static final Gson gson = new Gson();
 
 	public InvertedIndex(HashMap<String, ListLocation> index, ArrayList<Product> product) {
 		super();
 		this.index = index;
-		this.product = product;
+		this.products = product;
 	}
 
 	public InvertedIndex() {
 		// TODO Auto-generated constructor stub
 		this.index = new HashMap<String, ListLocation>();
-		this.product = new ArrayList<Product>();
+		this.products = new ArrayList<Product>();
 	}
 
 	public HashMap<String, ListLocation> getIndex() {
@@ -44,11 +44,11 @@ public class InvertedIndex {
 	}
 
 	public ArrayList<Product> getData() {
-		return product;
+		return products;
 	}
 
 	public void setData(ArrayList<Product> product) {
-		this.product = product;
+		this.products = product;
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class InvertedIndex {
 			Review review = gson.fromJson(line, Review.class);
 			review.lineNumber = lineNumber;
 			this.addWordToIndex(review.getReviewText(), lineNumber);
-			product.add(review);
+			products.add(review);
 		} catch(JsonParseException jspe) {
 			jspe.printStackTrace();
 		}
@@ -99,7 +99,7 @@ public class InvertedIndex {
 			Qa qa = gson.fromJson(line, Qa.class);
 			qa.lineNumber = lineNumber;
 			this.addWordToIndex(qa.getAnswer() + ":" + qa.getQuestion(), lineNumber);
-			product.add(qa);
+			products.add(qa);
 		} catch(JsonParseException jspe) {
 			throw jspe;
 		}
@@ -130,8 +130,45 @@ public class InvertedIndex {
 		}
 	}
 
-	public List<Integer> getLineByWordAndSortByFreq(String word){
-
-		return null;
+	public void getLineByWordAndSortByFreq(String word){
+		int count = 0;
+		if(this.getIndex().containsKey(word)) {
+			ListLocation listLocation = this.getIndex().get(word);
+			ArrayList<Location> locations = listLocation.sortByCount();
+			for(Location location : locations) {
+				ArrayList<Product> products = this.getProductByLineNumber(location.getLineNumber());
+				for(Product product : products) {
+					count++;
+					if(product instanceof Review) {
+						System.out.println(((Review)product).getReviewText());
+					} else {
+						System.out.format("Question: %s - Answer: %s \n", 
+								((Qa)product).getQuestion(), 
+								((Qa)product).getAnswer());
+					}
+				}
+			}
+		}
+		System.out.println(count);
+	}
+	
+	public ArrayList<? extends Product> getProductByAsin(String asin){
+		ArrayList<Product> results = new ArrayList<Product>();
+		for(Product p : this.products) {
+			if(p.getAsin().equals(asin)) {
+				results.add(p);
+			}
+		}
+		return results;
+	}
+	
+	public ArrayList<Product> getProductByLineNumber(int lineNumber){
+		ArrayList<Product> results = new ArrayList<Product>();
+		for(Product p : this.products) {
+			if(p.getLineNumber() == lineNumber) {
+				results.add(p);
+			}
+		}
+		return results;
 	}
 }
