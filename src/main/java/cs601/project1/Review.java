@@ -17,6 +17,6 @@ public class Review extends Product{
 	}
 	
 	public String toString() {
-		return this.lineNumber + " : " + this.reviewText;
+		return this.reviewText;
 	}
 }

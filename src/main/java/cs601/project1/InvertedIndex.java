@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
 import com.google.gson.Gson;
@@ -16,31 +15,30 @@ import com.google.gson.JsonParseException;
 import cs601.project1.AmazonSearch.TYPE;
 
 public class InvertedIndex {
-	private HashMap<String, ListLocation> index;
+	private HashMap<String, ListLocation> indexes;
 	private ArrayList<Product> products;
 
 	private static final Gson gson = new Gson();
 
 	public InvertedIndex(HashMap<String, ListLocation> index, ArrayList<Product> product) {
 		super();
-		this.index = index;
+		this.indexes = index;
 		this.products = product;
 	}
 
 	public InvertedIndex() {
-		// TODO Auto-generated constructor stub
-		this.index = new HashMap<String, ListLocation>();
+		this.indexes = new HashMap<String, ListLocation>();
 		this.products = new ArrayList<Product>();
 	}
 
 	public HashMap<String, ListLocation> getIndex() {
-		return index;
+		return indexes;
 	}
 
 
 
 	public void setIndex(HashMap<String, ListLocation> index) {
-		this.index = index;
+		this.indexes = index;
 	}
 
 	public ArrayList<Product> getData() {
@@ -74,7 +72,7 @@ public class InvertedIndex {
 					}
 				}
 				catch(JsonParseException jspe) {
-					jspe.printStackTrace();
+					//jspe.printStackTrace();
 					continue;
 				}
 			}
@@ -90,7 +88,7 @@ public class InvertedIndex {
 			this.addWordToIndex(review.getReviewText(), lineNumber);
 			products.add(review);
 		} catch(JsonParseException jspe) {
-			jspe.printStackTrace();
+			//jspe.printStackTrace();
 		}
 	}
 
@@ -119,40 +117,47 @@ public class InvertedIndex {
 			}
 		}
 		for(Entry<String, Integer> word : countWords.entrySet()) {
-			if(index.containsKey(word.getKey())) {
-				ListLocation listLocation = index.get(word.getKey());
+			if(indexes.containsKey(word.getKey())) {
+				ListLocation listLocation = indexes.get(word.getKey());
 				listLocation.addToList(new Location(lineNumber, word.getValue()));
 			} else {
 				ListLocation listLocation = new ListLocation(new ArrayList<Location>());
 				listLocation.addToList(new Location(lineNumber, word.getValue()));
-				index.put(word.getKey(), listLocation);
+				indexes.put(word.getKey(), listLocation);
 			}
 		}
 	}
 
-	public void getLineByWordAndSortByFreq(String word){
-		int count = 0;
+	public ArrayList<Product> getLineByWordAndSortByFreq(String word){
+		ArrayList<Product> result = new ArrayList<Product>();
 		if(this.getIndex().containsKey(word)) {
 			ListLocation listLocation = this.getIndex().get(word);
 			ArrayList<Location> locations = listLocation.sortByCount();
 			for(Location location : locations) {
 				ArrayList<Product> products = this.getProductByLineNumber(location.getLineNumber());
-				for(Product product : products) {
-					count++;
-					if(product instanceof Review) {
-						System.out.println(((Review)product).getReviewText());
-					} else {
-						System.out.format("Question: %s - Answer: %s \n", 
-								((Qa)product).getQuestion(), 
-								((Qa)product).getAnswer());
-					}
-				}
+				result.addAll(products);
 			}
 		}
-		System.out.println(count);
+		return result;
 	}
 	
-	public ArrayList<? extends Product> getProductByAsin(String asin){
+	public ArrayList<Product> getLineByPartialWordAndSortByFreq(String partialWord){
+		ArrayList<Product> result = new ArrayList<Product>();
+		ListLocation listLocation = new ListLocation(new ArrayList<Location>());
+		for(Entry<String, ListLocation> index : indexes.entrySet()) {
+			if(index.getKey().contains(partialWord)) {
+				listLocation.addListLocation(index.getValue());
+			}
+		}
+		ArrayList<Location> locations = listLocation.sortByCount();
+		for(Location location : locations) {
+			ArrayList<Product> products = this.getProductByLineNumber(location.getLineNumber());
+			result.addAll(products);
+		}
+		return products;
+	}
+	
+	public ArrayList<Product> getProductByAsin(String asin){
 		ArrayList<Product> results = new ArrayList<Product>();
 		for(Product p : this.products) {
 			if(p.getAsin().equals(asin)) {
@@ -162,7 +167,7 @@ public class InvertedIndex {
 		return results;
 	}
 	
-	public ArrayList<Product> getProductByLineNumber(int lineNumber){
+	private ArrayList<Product> getProductByLineNumber(int lineNumber){
 		ArrayList<Product> results = new ArrayList<Product>();
 		for(Product p : this.products) {
 			if(p.getLineNumber() == lineNumber) {

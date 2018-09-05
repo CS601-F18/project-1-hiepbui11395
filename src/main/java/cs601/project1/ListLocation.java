@@ -11,6 +11,28 @@ public class ListLocation {
 		this.listLocation = listLocation;
 	}
 
+	public ArrayList<Location> getListLocation() {
+		return listLocation;
+	}
+
+	public void setListLocation(ArrayList<Location> listLocation) {
+		this.listLocation = listLocation;
+	}
+	
+	public void addListLocation(ListLocation listLocation) {
+		for(Location location : listLocation.getListLocation()) {
+			int index = 0;
+			if((index = this.listLocation.indexOf(location)) == -1) {
+				location.setCount(1);
+				this.listLocation.add(location);
+			} else {
+				Location l = this.listLocation.get(index);
+				l.setCount(l.getCount() + location.getCount());
+			}
+		}
+	}
+	
+
 	/**
 	 * Add Location to the list
 	 * Check if the list already had input location or not
@@ -33,7 +55,6 @@ public class ListLocation {
 
 			@Override
 			public int compare(Location o1, Location o2) {
-				// TODO Auto-generated method stub
 				return Integer.compare(o1.getCount(),o2.getCount());
 			}
 		});
