@@ -88,7 +88,7 @@ public class InvertedIndex {
 			this.addWordToIndex(review.getReviewText(), lineNumber);
 			products.add(review);
 		} catch(JsonParseException jspe) {
-			//jspe.printStackTrace();
+			throw jspe;
 		}
 	}
 
@@ -104,7 +104,7 @@ public class InvertedIndex {
 	}
 
 	private void addWordToIndex(String text, int lineNumber) {
-		String[] words = text.split("[\\s@&.?$+-:/]+");
+		String[] words = text.split("[\\s@&.?$+-:/=_]+");
 		HashMap<String, Integer> countWords = new HashMap<String, Integer>();
 		for(String word : words) {
 			word = word.replaceAll("[^A-Za-z0-9]", "").toLowerCase().trim();
@@ -154,7 +154,7 @@ public class InvertedIndex {
 			ArrayList<Product> products = this.getProductByLineNumber(location.getLineNumber());
 			result.addAll(products);
 		}
-		return products;
+		return result;
 	}
 	
 	public ArrayList<Product> getProductByAsin(String asin){

@@ -2,10 +2,14 @@ package cs601.project1;
 
 public class Review extends Product{
 	private String reviewText;
+	private String reviewerID;
+	private double overall;
 
-	public Review(int lineNumber, String asin, String reviewText) {
+	public Review(int lineNumber, String asin, String reviewText, String reviewerID, double overall) {
 		super(lineNumber, asin);
 		this.reviewText = reviewText;
+		this.reviewerID = reviewerID;
+		this.overall = overall;
 	}
 
 	public String getReviewText() {
@@ -16,7 +20,23 @@ public class Review extends Product{
 		this.reviewText = reviewText;
 	}
 	
+	public String getReviewerID() {
+		return reviewerID;
+	}
+
+	public void setReviewerID(String reviewerID) {
+		this.reviewerID = reviewerID;
+	}
+
+	public double getOverall() {
+		return overall;
+	}
+
+	public void setOverall(double overall) {
+		this.overall = overall;
+	}
+
 	public String toString() {
-		return this.reviewText;
+		return String.format("ReviewerID: %s, Review Text: %s, Score: %f", this.reviewerID, this.reviewText, this.overall);
 	}
 }
