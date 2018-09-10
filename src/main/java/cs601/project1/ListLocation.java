@@ -35,8 +35,6 @@ public class ListLocation {
 
 	/**
 	 * Add Location to the list
-	 * Check if the list already had input location or not
-	 * If had, increase the count by 1. Else add the new ones
 	 * 
 	 * @param location
 	 */
@@ -48,6 +46,7 @@ public class ListLocation {
 	 * 
 	 * Sort the list of location by using Count in Location
 	 * 
+	 * @return ArrayList<Location> return a list of location after sorting
 	 */
 	public ArrayList<Location> sortByCount() {
 

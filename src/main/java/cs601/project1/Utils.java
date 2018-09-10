@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Utils {
+	/**
+	 * Processing the command of user
+	 * 
+	 * @param reviewIndex an InvertedIndex of review file
+	 * @param qaIndex an InvertedIndex of Qa file
+	 */
 	public static void executeCommand(InvertedIndex reviewIndex, InvertedIndex qaIndex) {
 		String commandLine = "";
 		String command = "";
 		String value = "";
-//		Console console = System.console();
 		Scanner sc = new Scanner(System.in);
 		System.out.println("List of command\n"
 				+ "    - find {asin}\n"
@@ -18,13 +23,12 @@ public class Utils {
 				+ "    - qapartialsearch {term}\n");
 		while(!command.equals("exit"))
 		{
-//			commandLine = console.readLine("Enter your command: ");
 			System.out.print("Enter your command: ");
 			commandLine = sc.nextLine();
 			String commandValues[] = commandLine.trim().split(" ");
 			if(commandValues.length!=2) {
-				if(commandValues.length==1 && commandValues[0].equals("help")) {
-					command = "help";
+				if(commandValues.length==1 && (commandValues[0].equals("help") || commandValues[0].equals("exit"))) {
+					command = commandValues[0];
 				} else {
 					command = "wrongcommand";
 				}
@@ -55,7 +59,10 @@ public class Utils {
 						+ "    - reviewsearch {term}\n"
 						+ "    - qasearch {term}\n"
 						+ "    - reviewpartialsearch {term}\n"
-						+ "    - qapartialsearch {term}\n");
+						+ "    - qapartialsearch {term}\n"
+						+ "    - exit");
+				break;
+			case "exit":
 				break;
 			default:
 				System.out.println("You may enter wrong command, please try again.\n If you don't remember, type \"help\"");
@@ -64,7 +71,14 @@ public class Utils {
 		sc.close();
 		System.out.println("Thank you for using the program!");
 	}
-	
+
+	/**
+	 * execute the command find asin
+	 * 
+	 * @param asin the key to find product
+	 * @param reviewIndex an InvertedIndex of review file
+	 * @param qaIndex an InvertedIndex of Qa file
+	 */
 	private static void find(String asin, InvertedIndex reviewIndex, InvertedIndex qaIndex) {
 		ArrayList<Product> reviews = reviewIndex.getProductByAsin(asin);
 		ArrayList<Product> qas = qaIndex.getProductByAsin(asin);
@@ -75,26 +89,45 @@ public class Utils {
 		Utils.printProductReviewOrQa(qas);
 	}
 
+	/**
+	 * execute the command search by word
+	 * 
+	 * @param term the key to find 
+	 * @param Index an InvertedIndex of Review/Qa file
+	 */
 	private static void searchByWord(String term, InvertedIndex index) {
 		ArrayList<Product> products = index.getLineByWordAndSortByFreq(term);
 		Utils.printProductReviewOrQa(products);
 	}
 
+	/**
+	 * execute the command search by partial word
+	 * 
+	 * @param term the key to find 
+	 * @param Index an InvertedIndex of Review/Qa file
+	 */
 	private static void searchByPartialWord(String term, InvertedIndex index) {
 		ArrayList<Product> products = index.getLineByPartialWordAndSortByFreq(term);
 		Utils.printProductReviewOrQa(products);
 	}
 
+	/**
+	 * print out the list of product
+	 * 
+	 * @param products  a list of product from the find and search command
+	 */
 	private static void printProductReviewOrQa(ArrayList<Product> products) {
-		int count = 0;
-		for(Product product : products) {
-			count++;
-			if(product instanceof Review) {
-				System.out.println(((Review)product).toString());
-			} else {
-				System.out.println(((Qa)product).toString());
+		if(products.size()==0) {
+			System.out.println("Not available");
+		}
+		else {
+			for(Product product : products) {
+				if(product instanceof Review) {
+					System.out.println(((Review)product).toString());
+				} else {
+					System.out.println(((Qa)product).toString());
+				}
 			}
 		}
-		System.out.println(count);
 	}
 }

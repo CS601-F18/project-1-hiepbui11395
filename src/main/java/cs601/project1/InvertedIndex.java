@@ -35,24 +35,23 @@ public class InvertedIndex {
 		return indexes;
 	}
 
-
-
 	public void setIndex(HashMap<String, ListLocation> index) {
 		this.indexes = index;
 	}
 
-	public ArrayList<Product> getData() {
+	public ArrayList<Product> getProducts() {
 		return products;
 	}
 
-	public void setData(ArrayList<Product> product) {
+	public void setProducts(ArrayList<Product> product) {
 		this.products = product;
 	}
 
 	/**
-	 * Add word from file to the InvertedIndex
-	 * 
-	 * @param type
+	 * Read each line from file and put it in the InvertedIndex and list product
+	 *
+	 * @param  path  an URL give the location of the file to read from
+	 * @param  type the enumerator to determine that it will be put in Review or Qa
 	 * @throws IOException
 	 */
 	public void addToIndex(Path path, TYPE type) throws IOException {
@@ -81,6 +80,13 @@ public class InvertedIndex {
 		};
 	}
 
+	/**
+	 * Parse a line and put an object to list products
+	 *
+	 * @param  line  a line that will be parsed to Object(Review)
+	 * @param  lineNumber work as an Id of each query
+	 * @throws JsonParseException
+	 */
 	private void addReview(String line, int lineNumber) throws JsonParseException{
 		try {
 			Review review = gson.fromJson(line, Review.class);
@@ -92,6 +98,13 @@ public class InvertedIndex {
 		}
 	}
 
+	/**
+	 * Parse a line and put an object to list products
+	 *
+	 * @param  line  a line that will be parsed to Object(Qa)
+	 * @param  lineNumber work as an Id of each query
+	 * @throws JsonParseException
+	 */
 	private void addQa(String line, int lineNumber) throws JsonParseException{
 		try {
 			Qa qa = gson.fromJson(line, Qa.class);
@@ -103,8 +116,15 @@ public class InvertedIndex {
 		}
 	}
 
+	/**
+	 * Get a textReviewText or Question/Answer split it to words and put in to the InvertedIndex
+	 *
+	 * @param  text  a textReview or Question/Answer
+	 * @param  lineNumber work as an Id of each query
+	 * @throws JsonParseException
+	 */
 	private void addWordToIndex(String text, int lineNumber) {
-		String[] words = text.split("[\\s@&.?$+-:/=_]+");
+		String[] words = text.split("\\W+");
 		HashMap<String, Integer> countWords = new HashMap<String, Integer>();
 		for(String word : words) {
 			word = word.replaceAll("[^A-Za-z0-9]", "").toLowerCase().trim();
@@ -127,20 +147,32 @@ public class InvertedIndex {
 			}
 		}
 	}
-
+	
+	/**
+	 * Input a string and find out the Review/Qa that contain that string
+	 *
+	 * @param  word  a key to find Review/Qa
+	 * @return ArrayList<Product> a list of product with Review/Qa
+	 */
 	public ArrayList<Product> getLineByWordAndSortByFreq(String word){
 		ArrayList<Product> result = new ArrayList<Product>();
 		if(this.getIndex().containsKey(word)) {
 			ListLocation listLocation = this.getIndex().get(word);
 			ArrayList<Location> locations = listLocation.sortByCount();
 			for(Location location : locations) {
-				ArrayList<Product> products = this.getProductByLineNumber(location.getLineNumber());
-				result.addAll(products);
+				Product product = this.getProductByLineNumber(location.getLineNumber());
+				result.add(product);
 			}
 		}
 		return result;
 	}
 	
+	/**
+	 * Input a string and find out the Review/Qa that contain that string as a partial word
+	 *
+	 * @param  partialWord  a key to find Review/Qa
+	 * @return ArrayList<Product> a list of product with Review/Qa
+	 */
 	public ArrayList<Product> getLineByPartialWordAndSortByFreq(String partialWord){
 		ArrayList<Product> result = new ArrayList<Product>();
 		ListLocation listLocation = new ListLocation(new ArrayList<Location>());
@@ -151,12 +183,18 @@ public class InvertedIndex {
 		}
 		ArrayList<Location> locations = listLocation.sortByCount();
 		for(Location location : locations) {
-			ArrayList<Product> products = this.getProductByLineNumber(location.getLineNumber());
-			result.addAll(products);
+			Product product = this.getProductByLineNumber(location.getLineNumber());
+			result.add(product);
 		}
 		return result;
 	}
 	
+	/**
+	 * Input a string(asin) and find out the product Review/Qa have the same asin
+	 *
+	 * @param  asin  a key to find product Review/Qa
+	 * @return ArrayList<Product> a list of product with Review/Qa to print out
+	 */
 	public ArrayList<Product> getProductByAsin(String asin){
 		ArrayList<Product> results = new ArrayList<Product>();
 		for(Product p : this.products) {
@@ -167,13 +205,18 @@ public class InvertedIndex {
 		return results;
 	}
 	
-	private ArrayList<Product> getProductByLineNumber(int lineNumber){
-		ArrayList<Product> results = new ArrayList<Product>();
+	/**
+	 * Input a line number and return a product base on that number
+	 *
+	 * @param  lineNumber  a key to find a product with Review/Qa
+	 * @return Product a product with review/qa
+	 */
+	private Product getProductByLineNumber(int lineNumber){
 		for(Product p : this.products) {
 			if(p.getLineNumber() == lineNumber) {
-				results.add(p);
+				return p;
 			}
 		}
-		return results;
+		return null;
 	}
 }
