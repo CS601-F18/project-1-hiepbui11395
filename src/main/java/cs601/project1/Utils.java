@@ -82,7 +82,7 @@ public class Utils {
 	private static void find(String asin, InvertedIndex reviewIndex, InvertedIndex qaIndex) {
 		ArrayList<Product> reviews = reviewIndex.getProductByAsin(asin);
 		ArrayList<Product> qas = qaIndex.getProductByAsin(asin);
-
+		
 		System.out.println("Reviews: ");
 		Utils.printProductReviewOrQa(reviews);
 		System.out.println("Questions and Answers: ");
@@ -117,11 +117,13 @@ public class Utils {
 	 * @param products  a list of product from the find and search command
 	 */
 	private static void printProductReviewOrQa(ArrayList<Product> products) {
+		int count = 0;
 		if(products.size()==0) {
 			System.out.println("Not available");
 		}
 		else {
 			for(Product product : products) {
+				count++;
 				if(product instanceof Review) {
 					System.out.println(((Review)product).toString());
 				} else {
@@ -129,5 +131,6 @@ public class Utils {
 				}
 			}
 		}
+		System.out.println("Num of queries: " + count);
 	}
 }
