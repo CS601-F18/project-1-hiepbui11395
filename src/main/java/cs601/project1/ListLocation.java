@@ -54,7 +54,7 @@ public class ListLocation {
 
 			@Override
 			public int compare(Location o1, Location o2) {
-				return Integer.compare(o1.getCount(),o2.getCount());
+				return Integer.compare(o2.getCount(),o1.getCount());
 			}
 		});
 		return this.listLocation;
