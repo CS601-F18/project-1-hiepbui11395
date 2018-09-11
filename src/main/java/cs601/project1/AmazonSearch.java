@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 public class AmazonSearch {
 	public enum TYPE {REVIEW, QA}
 	public static void main(String[] args) {
-		if(args.length !=4) {
+		if(args.length !=4 || !args[0].equals("-reviews") || !args[2].equals("-qa")) {
 			System.out.println("Usage: java -cp project1.jar cs601.project1.AmazonSearch -reviews <review_file_name> -qa <qa_file_name>");
 			System.exit(1);
 		}

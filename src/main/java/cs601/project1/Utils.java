@@ -23,8 +23,8 @@ public class Utils {
 				+ "    - qapartialsearch {term}\n");
 		while(!command.equals("exit"))
 		{
-			System.out.print("Enter your command: ");
-			commandLine = sc.nextLine();
+			System.out.print("Enter your command (Non case-sensitive): ");
+			commandLine = sc.nextLine().toLowerCase();
 			String commandValues[] = commandLine.trim().split(" ");
 			if(commandValues.length!=2) {
 				if(commandValues.length==1 && (commandValues[0].equals("help") || commandValues[0].equals("exit"))) {
@@ -117,13 +117,11 @@ public class Utils {
 	 * @param products  a list of product from the find and search command
 	 */
 	private static void printProductReviewOrQa(ArrayList<Product> products) {
-		int count = 0;
 		if(products.size()==0) {
 			System.out.println("Not available");
 		}
 		else {
 			for(Product product : products) {
-				count++;
 				if(product instanceof Review) {
 					System.out.println(((Review)product).toString());
 				} else {
@@ -131,6 +129,5 @@ public class Utils {
 				}
 			}
 		}
-		System.out.println("Num of queries: " + count);
 	}
 }
