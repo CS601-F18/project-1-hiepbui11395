@@ -20,10 +20,11 @@ public class Utils {
 				+ "    - reviewsearch {term}\n"
 				+ "    - qasearch {term}\n"
 				+ "    - reviewpartialsearch {term}\n"
-				+ "    - qapartialsearch {term}\n");
+				+ "    - qapartialsearch {term}\n"
+				+ "    - exit");
 		while(!command.equals("exit"))
 		{
-			System.out.print("Enter your command (Non case-sensitive): ");
+			System.out.print("\nEnter your command (Non case-sensitive): ");
 			commandLine = sc.nextLine().toLowerCase();
 			String commandValues[] = commandLine.trim().split(" ");
 			if(commandValues.length!=2) {
@@ -118,7 +119,7 @@ public class Utils {
 	 */
 	private static void printProductReviewOrQa(ArrayList<Product> products) {
 		if(products.size()==0) {
-			System.out.println("Not available");
+			System.out.println(" Not available");
 		}
 		else {
 			for(Product product : products) {

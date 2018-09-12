@@ -37,6 +37,6 @@ public class Review extends Product{
 	}
 
 	public String toString() {
-		return String.format("ReviewerID: %s, Score: %f, Review Text: %s", this.reviewerID, this.overall, this.reviewText);
+		return String.format(" - ReviewerID: %s\n - Score: %f\n - Review Text: %s\n\n", this.reviewerID, this.overall, this.reviewText);
 	}
 }

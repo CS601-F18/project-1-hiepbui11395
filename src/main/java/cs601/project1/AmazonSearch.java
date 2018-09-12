@@ -18,6 +18,7 @@ public class AmazonSearch {
 		InvertedIndex qaIndex = new InvertedIndex();
 
 		try {
+			
 			reviewIndex.addToIndex(reviewPath, TYPE.REVIEW);
 			qaIndex.addToIndex(qaPath, TYPE.QA);
 			System.out.println("Creating index finished! You can use the program now");

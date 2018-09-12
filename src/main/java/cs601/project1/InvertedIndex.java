@@ -88,6 +88,9 @@ public class InvertedIndex {
 					continue;
 				}
 			}
+			for(Entry<String, ListLocation> index : this.getIndexes().entrySet()) {
+				index.getValue().sortByCount();
+			}
 		} catch (IOException ioe) {
 			throw ioe;
 		};
@@ -104,8 +107,9 @@ public class InvertedIndex {
 		try {
 			Review review = gson.fromJson(line, Review.class);
 			review.lineNumber = lineNumber;
+			review.setAsin(review.getAsin().toLowerCase());
 			this.addWordToIndex(review.getReviewText(), lineNumber);
-			this.addProductToDictionary(review, review.asin, lineNumber);
+			this.addProductToDictionary(review, review.getAsin(), lineNumber);
 		} catch(JsonParseException jspe) {
 			throw jspe;
 		}
@@ -180,8 +184,8 @@ public class InvertedIndex {
 		ArrayList<Product> result = new ArrayList<Product>();
 		if(this.getIndexes().containsKey(word)) {
 			ListLocation listLocation = this.getIndexes().get(word);
-			ArrayList<Location> locations = listLocation.sortByCount();
-			for(Location location : locations) {
+			//ArrayList<Location> locations = listLocation.sortByCount();
+			for(Location location : listLocation.getListLocation()){
 				if(this.getProductsByLine().containsKey(location.getLineNumber())) {
 					result.add(this.getProductsByLine().get(location.getLineNumber()));
 				}
@@ -204,8 +208,8 @@ public class InvertedIndex {
 				listLocation.addListLocation(index.getValue());
 			}
 		}
-		ArrayList<Location> locations = listLocation.sortByCount();
-		for(Location location : locations) {
+		//ArrayList<Location> locations = listLocation.sortByCount();
+		for(Location location : listLocation.getListLocation()) {
 			if(this.getProductsByLine().containsKey(location.getLineNumber())) {
 				result.add(this.getProductsByLine().get(location.getLineNumber()));
 			}
