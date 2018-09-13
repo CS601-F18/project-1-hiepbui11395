@@ -126,6 +126,7 @@ public class InvertedIndex {
 		try {
 			Qa qa = gson.fromJson(line, Qa.class);
 			qa.lineNumber = lineNumber;
+			qa.setAsin(qa.getAsin().toLowerCase());
 			this.addWordToIndex(qa.getAnswer() + ":" + qa.getQuestion(), lineNumber);
 			this.addProductToDictionary(qa, qa.asin, lineNumber);
 		} catch(JsonParseException jspe) {

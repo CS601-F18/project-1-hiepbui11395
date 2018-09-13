@@ -18,9 +18,13 @@ public class AmazonSearch {
 		InvertedIndex qaIndex = new InvertedIndex();
 
 		try {
-			
+			long startTime = System.nanoTime();
 			reviewIndex.addToIndex(reviewPath, TYPE.REVIEW);
 			qaIndex.addToIndex(qaPath, TYPE.QA);
+			//Check time of the program
+			long endTime = System.nanoTime();
+			double time = (double)(endTime - startTime) / 1000000000.0;
+			System.out.println("After: " + time);
 			System.out.println("Creating index finished! You can use the program now");
 			Utils.executeCommand(reviewIndex, qaIndex);
 		} catch (IOException e) {

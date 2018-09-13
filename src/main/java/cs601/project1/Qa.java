@@ -27,6 +27,6 @@ public class Qa extends Product {
 	}
 	
 	public String toString() {
-		return String.format(" - Question: %s\n - Answer: %s \n\n", this.question, this.answer);
+		return String.format(" - ASIN: %s\n - Question: %s\n - Answer: %s \n\n", this.getAsin(), this.question, this.answer);
 	}
 }
