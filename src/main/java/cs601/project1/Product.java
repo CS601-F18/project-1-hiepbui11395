@@ -1,21 +1,21 @@
 package cs601.project1;
 
 public abstract class Product {
-	protected int lineNumber;
+	protected String locationCode;
 	protected String asin;
 
-	public Product(int lineNumber, String asin) {
+	public Product(String locationCode, String asin) {
 		super();
-		this.lineNumber = lineNumber;
+		this.locationCode = locationCode;
 		this.asin = asin;
 	}
 
-	public int getLineNumber() {
-		return lineNumber;
+	public String getLocationCode() {
+		return locationCode;
 	}
 
-	public void setLineNumber(int lineNumber) {
-		this.lineNumber = lineNumber;
+	public void setLocationCode(String locationCode) {
+		this.locationCode = locationCode;
 	}
 
 	

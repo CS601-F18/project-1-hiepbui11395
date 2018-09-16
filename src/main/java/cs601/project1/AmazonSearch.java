@@ -11,16 +11,14 @@ public class AmazonSearch {
 			System.out.println("Usage: java -cp project1.jar cs601.project1.AmazonSearch -reviews <review_file_name> -qa <qa_file_name>");
 			System.exit(1);
 		}
-
-		Path reviewPath = Paths.get(args[1]);
-		Path qaPath = Paths.get(args[3]);
+		
 		InvertedIndex reviewIndex = new InvertedIndex();
 		InvertedIndex qaIndex = new InvertedIndex();
 
 		try {
 			long startTime = System.nanoTime();
-			reviewIndex.addToIndex(reviewPath, TYPE.REVIEW);
-			qaIndex.addToIndex(qaPath, TYPE.QA);
+			Utils.addToIndex(args[1], reviewIndex, TYPE.REVIEW);
+			Utils.addToIndex(args[3], qaIndex, TYPE.QA);
 			//Check time of the program
 			long endTime = System.nanoTime();
 			double time = (double)(endTime - startTime) / 1000000000.0;

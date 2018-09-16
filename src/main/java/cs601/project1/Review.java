@@ -5,8 +5,8 @@ public class Review extends Product{
 	private String reviewerID;
 	private double overall;
 
-	public Review(int lineNumber, String asin, String reviewText, String reviewerID, double overall) {
-		super(lineNumber, asin);
+	public Review(String location, String asin, String reviewText, String reviewerID, double overall) {
+		super(location, asin);
 		this.reviewText = reviewText;
 		this.reviewerID = reviewerID;
 		this.overall = overall;
