@@ -25,7 +25,7 @@ public class Utils {
 	 * @param type type of product's doc(Review/QA)
 	 * @throws IOException
 	 */
-	public static void addToIndex(String url, InvertedIndex invertedIndex, TYPE type) throws IOException {
+	public static void addToIndex(String url, ProductList products, InvertedIndex invertedIndex, TYPE type) throws IOException {
 		String line = "";
 		int count =0;
 		Path path = Paths.get(url);
@@ -48,14 +48,14 @@ public class Utils {
 					product.locationCode = String.format("%s - %d", url, count);
 					product.setAsin(product.getAsin().toLowerCase());
 					invertedIndex.addWordToIndex(text, product.getLocationCode());
-					invertedIndex.addProductToDictionary(product, product.getAsin(), product.getLocationCode());
+					products.addProductToDictionary(product, product.getAsin(), product.getLocationCode());
 				}
 				catch(JsonParseException jspe) {
 					//jspe.printStackTrace();
 					continue;
 				}
 			}
-			for(Entry<String, ListLocation> index : invertedIndex.getIndexes().entrySet()) {
+			for(Entry<String, LocationList> index : invertedIndex.getIndexes().entrySet()) {
 				index.getValue().sortByCount();
 			}
 		} catch (IOException ioe) {
@@ -69,7 +69,7 @@ public class Utils {
 	 * @param reviewIndex an InvertedIndex of review file
 	 * @param qaIndex an InvertedIndex of Qa file
 	 */
-	public static void executeCommand(InvertedIndex reviewIndex, InvertedIndex qaIndex) {
+	public static void executeCommand(InvertedIndex reviewIndex, InvertedIndex qaIndex, ProductList products) {
 		String commandLine = "";
 		String command = "";
 		String value = "";
@@ -99,19 +99,19 @@ public class Utils {
 			}
 			switch(command) {
 			case "find": 
-				Utils.find(value, reviewIndex, qaIndex);
+				Utils.find(value, reviewIndex, qaIndex, products);
 				break;
 			case "reviewsearch":
-				Utils.searchByWord(value, reviewIndex);
+				Utils.searchByWord(value, reviewIndex, products);
 				break;
 			case "qasearch":
-				Utils.searchByWord(value, qaIndex);
+				Utils.searchByWord(value, qaIndex, products);
 				break;
 			case "reviewpartialsearch":
-				Utils.searchByPartialWord(value, reviewIndex);
+				Utils.searchByPartialWord(value, reviewIndex, products);
 				break;
 			case "qapartialsearch":
-				Utils.searchByPartialWord(value, qaIndex);
+				Utils.searchByPartialWord(value, qaIndex, products);
 				break;
 			case "help":
 				System.out.println("List of command\n"
@@ -139,14 +139,11 @@ public class Utils {
 	 * @param reviewIndex an InvertedIndex of review file
 	 * @param qaIndex an InvertedIndex of Qa file
 	 */
-	private static void find(String asin, InvertedIndex reviewIndex, InvertedIndex qaIndex) {
-		ArrayList<Product> reviews = reviewIndex.getProductByAsin(asin);
-		ArrayList<Product> qas = qaIndex.getProductByAsin(asin);
+	private static void find(String asin, InvertedIndex reviewIndex, InvertedIndex qaIndex, ProductList  products) {
+		ArrayList<Product> result = products.getProductByAsin(asin);
 
-		System.out.println("Reviews: ");
-		Utils.printProductReviewOrQa(reviews);
-		System.out.println("Questions and Answers: ");
-		Utils.printProductReviewOrQa(qas);
+		System.out.println("Result: ");
+		Utils.printProductReviewOrQa(result);
 	}
 
 	/**
@@ -155,9 +152,9 @@ public class Utils {
 	 * @param term the key to find 
 	 * @param Index an InvertedIndex of Review/Qa file
 	 */
-	private static void searchByWord(String term, InvertedIndex index) {
-		ArrayList<Product> products = index.getLineByWordAndSortByFreq(term);
-		Utils.printProductReviewOrQa(products);
+	private static void searchByWord(String term, InvertedIndex index, ProductList products) {
+		ArrayList<Product> result = products.getLineByWordAndSortByFreq(term, index);
+		Utils.printProductReviewOrQa(result);
 	}
 
 	/**
@@ -166,9 +163,9 @@ public class Utils {
 	 * @param term the key to find 
 	 * @param Index an InvertedIndex of Review/Qa file
 	 */
-	private static void searchByPartialWord(String term, InvertedIndex index) {
-		ArrayList<Product> products = index.getLineByPartialWordAndSortByFreq(term);
-		Utils.printProductReviewOrQa(products);
+	private static void searchByPartialWord(String term, InvertedIndex index, ProductList products) {
+		ArrayList<Product> result = products.getLineByPartialWordAndSortByFreq(term, index);
+		Utils.printProductReviewOrQa(result);
 	}
 
 	/**

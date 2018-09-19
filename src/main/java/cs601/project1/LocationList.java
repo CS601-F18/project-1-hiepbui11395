@@ -3,10 +3,10 @@ package cs601.project1;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class ListLocation {
+public class LocationList {
 	private ArrayList<Location> listLocation;
 
-	public ListLocation(ArrayList<Location> listLocation) {
+	public LocationList(ArrayList<Location> listLocation) {
 		super();
 		this.listLocation = listLocation;
 	}
@@ -19,8 +19,8 @@ public class ListLocation {
 		this.listLocation = listLocation;
 	}
 	
-	public void addListLocation(ListLocation listLocation) {
-		for(Location location : listLocation.getListLocation()) {
+	public void addListLocation(LocationList locationList) {
+		for(Location location : locationList.getListLocation()) {
 			int index = 0;
 			if((index = this.listLocation.indexOf(location)) == -1) {
 				location.setCount(1);
